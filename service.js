@@ -10,24 +10,29 @@ var respReq = 0;
 
 exports.init = function (callback) {
     //function compteur verifie si les 2 requet ont bien était recus avant d'executer callback
-    function compteur (){
+    function compteur() {
         respReq++
-        if (respReq === 2){
+        if (respReq === 2) {
             callback(talks.length);
         }
     }
-// Envoie de la requête http
-request('http://www.breizhcamp.org/json/talks.json', { json: true }, function(err, res, body) {
-    if (err) { return console.log('Erreur', err); }
-    talks = talks.concat(body)
-    compteur()
-});
 
-request('http://www.breizhcamp.org/json/others.json', { json: true }, function(err, res, body) {
-    if (err) { return console.log('Erreur', err); }
-    talks= talks.concat(body)
-    compteur()
-});
 
- 
+    // Envoie de la requête http
+    request('http://www.breizhcamp.org/json/talks.json', { json: true }, function (err, res, body) {
+        if (err) { return console.log('Erreur', err); }
+        talks = talks.concat(body)
+        compteur()
+    });
+
+    request('http://www.breizhcamp.org/json/others.json', { json: true }, function (err, res, body) {
+        if (err) { return console.log('Erreur', err); }
+        talks = talks.concat(body)
+        compteur()
+    });
+
+
 };
+exports.listerSessions = function (callback) {
+    return talks
+}
