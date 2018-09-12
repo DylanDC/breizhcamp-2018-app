@@ -1,4 +1,4 @@
-
+/* 
 // importation de la librairie request
 // recherche par défaut dans le répertoire node_modules
 var request = require('request')
@@ -36,3 +36,40 @@ exports.init = function (callback) {
 exports.listerSessions = function (callback) {
     return talks
 }
+ */
+var rp = require('request-promise-native');
+const DATA_SOURCE_URLS = ['http://www.breizhcamp.org/json/talks.json', 'http://www.breizhcamp.org/json/others.json']
+class Service {
+
+
+
+
+    constructor() {
+        this.talks = [];
+    }
+
+    init() {
+        const reqs$ = DATA_SOURCE_URLS.map(url => rp(url, {
+            json: true
+        }));
+
+        return Promise.all(reqs$).then(resultat => {
+            resultat.forEach(r => { this.talks = this.talks.concat(r) });
+
+            return this.talks.length;
+        });
+
+
+    }
+
+    listerService() {
+
+        return this.talks;
+    }
+
+    listerPresentateurs() {
+        return this.talks.map(session => session.speakers)
+    }
+}
+
+module.exports = Service;
